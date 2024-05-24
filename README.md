@@ -5,7 +5,7 @@ Playing with duckdb &amp; echarts
 
 ### 1 - Scrap data and store the data locally
 
-just run the follwing script in python  :
+just run the following python script :
 ```bash
 pip install -r requirements.txt
 python _01_data_prep.py
