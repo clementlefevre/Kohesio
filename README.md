@@ -21,6 +21,5 @@ Output can be found in **EDA.html** : [just download the file and open it with a
 
 ![Demo](https://github.com/clementlefevre/Kohesio/blob/main/pic_1.png?raw=true)
 
-### Output
 
 
