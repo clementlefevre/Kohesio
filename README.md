@@ -20,3 +20,7 @@ Output can be found in **EDA.html** (just open the file with a browser)
 
 
 ![Demo](https://github.com/clementlefevre/Kohesio/blob/main/pic_1.png?raw=true)
+
+### Output
+
+[Download the result and open in your browser](https://github.com/clementlefevre/Kohesio/blob/main/EDA.html)
