@@ -16,11 +16,11 @@ python _01_data_prep.py
 open the *EDA.Rmd* and knit it.
 
 
-Output can be found in **EDA.html** (just open the file with a browser)
+Output can be found in **EDA.html** : [just download the file and open it with a browser](https://github.com/clementlefevre/Kohesio/blob/main/EDA.html)
 
 
 ![Demo](https://github.com/clementlefevre/Kohesio/blob/main/pic_1.png?raw=true)
 
 ### Output
 
-[Download the result and open in your browser](https://github.com/clementlefevre/Kohesio/blob/main/EDA.html)
+
