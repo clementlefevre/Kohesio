@@ -1,0 +1,31 @@
+h1, .h1, h2, .h2, h3, .h3 {
+    margin-top: 84px;
+}
+
+.btn {
+    border-width: 0 0px 0px 0px;
+    font-weight: normal;
+    text-transform: ;
+}
+.btn-default {
+    color: #2ecc71;
+    background-color: #ffffff;
+    border-color: #ffffff;
+}
+
+
+
+p.caption {
+  font-size: 0.9em;
+  font-style: italic;
+  color: grey;
+  margin-right: 10%;
+  margin-left: 10%;  
+  text-align: justify;
+}
+
+.container-fluid.main-container {
+  max-width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}

@@ -1,0 +1,126 @@
+---
+title: "KOHESIO"
+date: "`r Sys.Date()`"
+author: Clément Lefèvre
+output:
+  html_document:
+    code_folding: hide
+    css: style.css
+    df_print: paged
+    highlight: tango
+    includes:
+      after_body: footer.html
+    theme: sandstone
+---
+```{r setup, include=FALSE} 
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+
+
+
+
+```{r}
+library(arrow)
+library(ggplot2)
+library(data.table)
+library(echarts4r)
+library(dplyr)
+
+```
+
+
+```{r}
+DT <- setDT(arrow::read_parquet("data/Kohesio_expenditure_per_nuts3.parquet"))
+DT[, GDP_PER_HA := as.numeric(GDP_PER_HA)]
+DT[, COUNTRY := substr(nuts3code, 1, 2)]
+
+DT_clean <- DT[(!is.null(GDP_PER_HA)) & (!is.null(expenditure_per_ha)) & (!is.null(Total_Eligible_Expenditure_amount)) & (length(COUNTRY) > 1)]
+DT_clean[,ratio_expenditure_vs_GDP_per_ha:=expenditure_per_ha/GDP_PER_HA]
+DT_clean[,geo_label:=paste0("<b>",COUNTRY,"</b>", "-",nuts3Label )]
+DT_clean[,geo_label_2:=paste0(COUNTRY, "-",nuts3Label )]
+
+DT_clean <- DT_clean[order(-ratio_expenditure_vs_GDP_per_ha)]
+```
+
+
+
+## Expenditure per HA vs GDP per HA
+```{r, fig.width=20, fig.height=20}
+
+
+
+DT_clean[,geo_label:=paste0("<b>",COUNTRY,"</b>", "-",nuts3Label )]
+DT_clean %>%
+  filter(COUNTRY %in% c(
+    "PL", "SK", "BG", "CZ", "HR", "IT", "LT", "RO", "PT", "SI",
+    "HU", "FR", "DE", "LV", "EE", "ES", "BE", "AT", "FI", "SE",
+    "NL", "DK", "LU", "CY", "IE"
+  )) %>%
+  group_by(COUNTRY) %>%
+  e_charts(GDP_PER_HA) %>%
+  e_scatter(
+    expenditure_per_ha, Total_Eligible_Expenditure_amount,
+    bind = geo_label,
+    symbolSize = htmlwidgets::JS("function (value) {
+              return Math.sqrt(value[2]) / 3000;
+            }")
+  ) %>%
+  e_tooltip(trigger = "item", formatter = htmlwidgets::JS("
+              function(params) {
+                return  'NUTS3 : ' + params.name + '<br/>' +
+                       'GDP per HA: ' +'<b>' +params.value[0].toLocaleString() + '€<br/></b>' +
+                       'Total Eligible Expenditure Amount: '  +'<b>' + params.value[2].toLocaleString() + '€</b><br/>' +
+                       'Expenditure per HA: ' +'<b>' + params.value[1].toLocaleString()+ '€</b><br/>';
+              }
+            ")) %>%
+  e_x_axis(name = "GDP per HA") %>%
+  e_y_axis(name = "Expenditure per HA") %>%
+  e_datazoom(type = "slider", x_index = 0) %>%
+  e_datazoom(type = "slider", y_index = 0)
+
+
+
+```
+
+
+
+## EU Budget per HA vs GDP per HA
+```{r, fig.width=20, fig.height=20}
+
+
+DT_clean[,geo_label:=paste0("<b>",COUNTRY,"</b>", "-",nuts3Label )]
+DT_clean %>%
+  filter(COUNTRY %in% c(
+    "PL", "SK", "BG", "CZ", "HR", "IT", "LT", "RO", "PT", "SI",
+    "HU", "FR", "DE", "LV", "EE", "ES", "BE", "AT", "FI", "SE",
+    "NL", "DK", "LU", "CY", "IE"
+  )) %>%
+  
+  #filter(EU_budget_per_ha>0)|>
+  group_by(COUNTRY) %>%
+  e_charts(GDP_PER_HA) %>%
+  e_scatter(
+    EU_budget_per_ha, Project_EU_Budget,
+    bind = geo_label
+    ,
+    symbolSize = htmlwidgets::JS("function (value) {
+              return Math.sqrt(value[2]) / 3000;
+           }")
+  ) %>%
+  e_tooltip(trigger = "item", formatter = htmlwidgets::JS("
+              function(params) {
+                return  'NUTS3 : ' + params.name + '<br/>' +
+                       'GDP per HA: ' +'<b>' +params.value[0].toLocaleString() + '€<br/></b>' +
+                       'Project EU Budget: '  +'<b>' + params.value[2].toLocaleString() + '€</b><br/>' +
+                       'EU Budget per HA: ' +'<b>' + params.value[1].toLocaleString()+ '€</b><br/>';
+              }
+            ")) %>%
+  e_x_axis(name = "GDP per HA") %>%
+  e_y_axis(name = "EU Budget per HA") %>%
+  e_datazoom(type = "slider", x_index = 0) %>%
+  e_datazoom(type = "slider", y_index = 0)
+
+
+
+```
